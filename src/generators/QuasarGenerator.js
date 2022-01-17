@@ -403,7 +403,7 @@ export const store = new Vuex.Store({
 
     // Create directories
     // These directories may already exist
-    for (let dir of [
+    for (let newDir of [
       `${dir}/config`,
       `${dir}/error`,
       `${dir}/router`,
@@ -421,10 +421,10 @@ export const store = new Vuex.Store({
       `${dir}/common/store/show`,
       `${dir}/common/store/update`,
     ]) {
-      this.createDir(dir, false);
+      this.createDir(newDir, false);
     }
 
-    for (let dir of [
+    for (let newDir of [
       `${dir}/store/modules/${lc}`,
       `${dir}/store/modules/${lc}/create`,
       `${dir}/store/modules/${lc}/delete`,
@@ -434,7 +434,7 @@ export const store = new Vuex.Store({
 
       `${dir}/components/${lc}`,
     ]) {
-      this.createDir(dir);
+      this.createDir(newDir);
     }
 
     for (let common of [
