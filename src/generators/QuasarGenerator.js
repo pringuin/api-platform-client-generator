@@ -206,13 +206,15 @@ export default class extends BaseGenerator {
   }
 
   help(resource) {
-    const titleLc = resource.title.toLowerCase();
-
     console.log(
-      'Code for the "%s" resource type has been generated!',
+      'Generating code for the "%s" resource type...',
       resource.title
     );
-    console.log(
+
+    // const titleLc = resource.title.toLowerCase();
+
+    // Shhhh, hush now.
+    /* console.log(
       "Paste the following definitions in your application configuration:"
     );
     console.log(
@@ -277,7 +279,7 @@ export const store = new Vuex.Store({
   }
 });
 `)
-    );
+    ); */
   }
 
   registerSwitchHelper() {
