@@ -62,11 +62,11 @@ export default class {
 
     // Format the generated code using Prettier
     let content = this.templates[template](context);
-    if (template.endsWith(".js")) {
-      content = prettier.format(content, { parser: "babel" });
-    } else if (template.endsWith(".ts") || template.endsWith(".tsx")) {
-      content = prettier.format(content, { parser: "babel-ts" });
-    }
+    // if (template.endsWith(".js")) {
+    //   content = prettier.format(content, { parser: "babel" });
+    // } else if (template.endsWith(".ts") || template.endsWith(".tsx")) {
+    //   content = prettier.format(content, { parser: "babel-ts" });
+    // }
 
     if (!fs.existsSync(dest)) {
       fs.writeFileSync(dest, content);
