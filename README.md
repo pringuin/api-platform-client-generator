@@ -35,6 +35,18 @@ The documentation of API Platform's Client Generator can be browsed [on the offi
 * The generated HTML code is accessible to people with disabilities ([ARIA](https://www.w3.org/WAI/intro/aria) support)
 
 
+## Setup for development
+
+1. Clone this repository
+2. Install dependencies:
+    ```bash
+    yarn
+    ```
+3. Build the code:
+    ```bash
+    yarn build
+    ```
+
 ## Usage
 
 ### Hydra
