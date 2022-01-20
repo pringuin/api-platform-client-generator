@@ -3,7 +3,7 @@ import fs from "fs";
 import handlebars from "handlebars";
 import mkdirp from "mkdirp";
 import { sprintf } from "sprintf-js";
-import prettier from "prettier";
+// import prettier from "prettier";
 
 export default class {
   templates = {};
