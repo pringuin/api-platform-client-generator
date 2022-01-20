@@ -413,6 +413,10 @@ export const store = new Vuex.Store({
     const dateTypes = ["time", "date", "dateTime"];
     const formContainsDate = formFields.some((e) => dateTypes.includes(e.type));
 
+    const formContainsRef = formFields.some(
+      (e) => e.type === "text" && e.reference
+    );
+
     const fields = this.buildFields(resource.readableFields);
     const listContainsDate = fields.some((e) => dateTypes.includes(e.type));
 
@@ -480,6 +484,7 @@ export const store = new Vuex.Store({
       parameters,
       formFields,
       formContainsDate,
+      formContainsRef,
       hydraPrefix: this.hydraPrefix,
       titleUcFirst,
       labels,
