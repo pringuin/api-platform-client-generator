@@ -37,6 +37,8 @@ The documentation of API Platform's Client Generator can be browsed [on the offi
 
 ## Setup for development
 
+Note that you'll need node v 16+ with npx 8+.
+
 1. Clone this repository
 2. Install dependencies:
     ```bash
