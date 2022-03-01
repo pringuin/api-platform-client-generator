@@ -70,6 +70,7 @@ async function main() {
   const generator = (await generators(options.generator))({
     hydraPrefix: options.hydraPrefix,
     templateDirectory: options.templateDirectory,
+    entrypointWithSlash,
   });
   const resourceToGenerate = options.resource
     ? options.resource.toLowerCase()

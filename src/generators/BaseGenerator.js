@@ -8,9 +8,10 @@ import { sprintf } from "sprintf-js";
 export default class {
   templates = {};
 
-  constructor({ hydraPrefix, templateDirectory }) {
+  constructor({ hydraPrefix, templateDirectory, entrypointWithSlash }) {
     this.hydraPrefix = hydraPrefix;
     this.templateDirectory = templateDirectory;
+    this.entrypointWithSlash = entrypointWithSlash;
 
     this.registerTemplates("", ["entrypoint.js"]);
   }

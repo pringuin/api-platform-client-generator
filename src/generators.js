@@ -9,8 +9,8 @@ import VuetifyGenerator from "./generators/VuetifyGenerator";
 import QuasarGenerator from "./generators/QuasarGenerator";
 
 function wrap(cl) {
-  return ({ hydraPrefix, templateDirectory }) =>
-    new cl({ hydraPrefix, templateDirectory });
+  return ({ hydraPrefix, templateDirectory, entrypointWithSlash }) =>
+    new cl({ hydraPrefix, templateDirectory, entrypointWithSlash });
 }
 
 export default async function generators(generator = "react") {
