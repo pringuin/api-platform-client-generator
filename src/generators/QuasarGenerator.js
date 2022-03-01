@@ -47,6 +47,7 @@ export default class extends BaseGenerator {
       "common/components/ConfirmDelete.vue",
       "common/components/DataFilter.vue",
       "common/components/InputDate.vue",
+      "common/components/InputColor.vue",
       "common/components/Loading.vue",
       "common/components/Toolbar.vue",
 
@@ -417,6 +418,8 @@ export const store = new Vuex.Store({
       (e) => e.type === "text" && e.reference
     );
 
+    const formContainsColor = formFields.some((e) => e.type === "color");
+
     const fields = this.buildFields(resource.readableFields);
     const listContainsDate = fields.some((e) => dateTypes.includes(e.type));
 
@@ -485,6 +488,7 @@ export const store = new Vuex.Store({
       formFields,
       formContainsDate,
       formContainsRef,
+      formContainsColor,
       hydraPrefix: this.hydraPrefix,
       titleUcFirst,
       labels,
@@ -534,6 +538,7 @@ export const store = new Vuex.Store({
       "common/components/ConfirmDelete.vue",
       "common/components/DataFilter.vue",
       "common/components/InputDate.vue",
+      "common/components/InputColor.vue",
       "common/components/Loading.vue",
       "common/components/Toolbar.vue",
 

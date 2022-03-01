@@ -117,6 +117,10 @@ export default class {
 
       case "http://schema.org/url":
         return { type: "url" };
+
+      case this.entrypointWithSlash + "color": // fall through
+      case "http://schema.org/color":
+        return { type: "color" };
     }
 
     switch (field.range) {
