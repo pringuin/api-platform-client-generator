@@ -79,17 +79,17 @@ async function main() {
     : null;
 
   const parser = (entrypointWithSlash) => {
-    const options = {};
+    const hydraOptions = {};
     if (options.username && options.password) {
       const encoded = Buffer.from(
         `${options.username}:${options.password}`
       ).toString("base64");
-      options.headers = new Headers();
-      options.headers.set("Authorization", `Basic ${encoded}`);
+      hydraOptions.headers = new Headers();
+      hydraOptions.headers.set("Authorization", `Basic ${encoded}`);
     }
     if (options.bearer) {
-      options.headers = new Headers();
-      options.headers.set("Authorization", `Bearer ${options.bearer}`);
+      hydraOptions.headers = new Headers();
+      hydraOptions.headers.set("Authorization", `Bearer ${options.bearer}`);
     }
     switch (options.format) {
       case "swagger": // deprecated
