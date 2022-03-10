@@ -18,11 +18,15 @@ export default class {
 
   registerTemplates(basePath, paths) {
     for (let path of paths) {
-      this.templates[path] = handlebars.compile(
-        fs
-          .readFileSync(`${this.templateDirectory}/${basePath}${path}`)
-          .toString()
-      );
+      try {
+        this.templates[path] = handlebars.compile(
+          fs
+            .readFileSync(`${this.templateDirectory}/${basePath}${path}`)
+            .toString()
+        );
+      } catch (error) {
+        console.log("Template registered but not found:", path);
+      }
     }
   }
 
