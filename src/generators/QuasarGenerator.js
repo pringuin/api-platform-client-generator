@@ -63,6 +63,7 @@ export default class extends BaseGenerator {
       // utils
       "utils/fetch.js",
       "utils/dates.js",
+      "utils/importHelper.js",
       "utils/notify.js",
       "utils/vuexer.js",
 
@@ -666,6 +667,21 @@ export const store = new Vuex.Store({
       "i18n/index.js",
       `${dir}/i18n/en-us/${lc}.js`,
       contextLabels,
+      false
+    );
+  }
+
+  generateImportHelper(resources, dir) {
+    const modules = resources.map((resource) => resource.title.toLowerCase());
+    // console.log(modules);
+
+    this.createFile(
+      "utils/importHelper.js",
+      `${dir}/utils/importHelper.js`,
+      {
+        modules: modules,
+        dir: dir,
+      },
       false
     );
   }

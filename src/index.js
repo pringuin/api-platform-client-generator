@@ -120,7 +120,7 @@ async function main() {
             titleLc === resourceToGenerate
           );
         })
-        .map((resource) => {
+        .map((resource, index, array) => {
           const filterDeprecated = (list) =>
             list.filter(({ deprecated }) => !deprecated);
 
@@ -128,7 +128,17 @@ async function main() {
           resource.readableFields = filterDeprecated(resource.readableFields);
           resource.writableFields = filterDeprecated(resource.writableFields);
 
-          generator.generate(ret.api, resource, outputDirectory, serverPath);
+          generator
+            .generate(ret.api, resource, outputDirectory, serverPath)
+            .then(() => {
+              if (
+                !index &&
+                generator.generateImportHelper &&
+                typeof generator.generateImportHelper === "function"
+              ) {
+                generator.generateImportHelper(array, outputDirectory);
+              }
+            });
 
           return resource;
         })
