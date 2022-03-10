@@ -207,10 +207,7 @@ export default class extends BaseGenerator {
   }
 
   help(resource) {
-    console.log(
-      'Generating code for the "%s" resource type...',
-      resource.title
-    );
+    console.log('Generated code for the "%s" resource type...', resource.title);
 
     // const titleLc = resource.title.toLowerCase();
 
