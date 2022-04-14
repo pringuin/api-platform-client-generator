@@ -115,7 +115,8 @@ export default class {
   }
 
   getHtmlInputTypeFromField(field) {
-    switch (field.id) {
+    const fieldId = (field.id || "").replace("https://", "http://");
+    switch (fieldId) {
       case "http://schema.org/email":
         return { type: "email" };
 
@@ -127,7 +128,8 @@ export default class {
         return { type: "color" };
     }
 
-    switch (field.range) {
+    const fieldRange = (field.range || "").replace("https://", "http://");
+    switch (fieldRange) {
       case "http://www.w3.org/2001/XMLSchema#integer":
         return { type: "number", number: true };
 
@@ -160,7 +162,8 @@ export default class {
       return "string";
     }
 
-    switch (field.range) {
+    const fieldRange = (field.range || "").replace("https://", "http://");
+    switch (fieldRange) {
       case "http://www.w3.org/2001/XMLSchema#integer":
       case "http://www.w3.org/2001/XMLSchema#decimal":
         return "number";
