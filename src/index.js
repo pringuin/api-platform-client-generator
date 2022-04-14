@@ -99,7 +99,7 @@ async function main() {
       case "openapi3":
         return parseOpenApi3Documentation(entrypointWithSlash);
       default:
-        return parseHydraDocumentation(entrypointWithSlash, options);
+        return parseHydraDocumentation(entrypointWithSlash, hydraOptions);
     }
   };
 
