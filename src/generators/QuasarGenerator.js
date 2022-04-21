@@ -672,7 +672,9 @@ export const store = new Vuex.Store({
   }
 
   generateImportHelper(resources, dir) {
-    const modules = resources.map((resource) => resource.title.toLowerCase());
+    const modules = resources
+      .map((resource) => resource.title.toLowerCase())
+      .sort();
     // console.log(modules);
 
     this.createFile(
