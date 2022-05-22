@@ -115,6 +115,7 @@ export default class extends BaseGenerator {
       "components/foo/List.vue",
       "components/foo/Update.vue",
       "components/foo/Show.vue",
+      "components/foo/settings.js",
 
       // routes
       "router/foo.js",
@@ -179,6 +180,7 @@ export default class extends BaseGenerator {
           `components/${componentModule}/List.vue`,
           `components/${componentModule}/Update.vue`,
           `components/${componentModule}/Show.vue`,
+          `components/${componentModule}/settings.js`,
         ].forEach((templatePath) => {
           if (
             fs.existsSync(`${this.templateDirectory}/quasar/${templatePath}`)
@@ -620,6 +622,7 @@ export const store = new Vuex.Store({
       "components/%s/List.vue",
       "components/%s/Update.vue",
       "components/%s/Show.vue",
+      "components/%s/settings.js",
 
       // routes
       "router/%s.js",
