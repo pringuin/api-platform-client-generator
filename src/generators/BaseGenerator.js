@@ -149,6 +149,19 @@ export default class {
         return { type: "dateTime" };
 
       default:
+        if (
+          field.id &&
+          field.id.startsWith(`${this.entrypointWithSlash}Entity/`)
+        ) {
+          const referencedClass = field.id.replace(
+            `${this.entrypointWithSlash}Entity/`,
+            ""
+          );
+          return {
+            type: "text",
+            referencedClass: referencedClass,
+          };
+        }
         return { type: "text" };
     }
   }
