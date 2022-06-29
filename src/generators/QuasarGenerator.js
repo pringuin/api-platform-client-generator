@@ -115,6 +115,7 @@ export default class extends BaseGenerator {
       "components/foo/List.vue",
       "components/foo/Update.vue",
       "components/foo/Show.vue",
+      "components/foo/Search.vue",
       "components/foo/settings.js",
 
       // routes
@@ -180,6 +181,7 @@ export default class extends BaseGenerator {
           `components/${componentModule}/List.vue`,
           `components/${componentModule}/Update.vue`,
           `components/${componentModule}/Show.vue`,
+          `components/${componentModule}/Search.vue`,
           `components/${componentModule}/settings.js`,
         ].forEach((templatePath) => {
           if (
@@ -622,6 +624,7 @@ export const store = new Vuex.Store({
       "components/%s/List.vue",
       "components/%s/Update.vue",
       "components/%s/Show.vue",
+      "components/%s/Search.vue",
       "components/%s/settings.js",
 
       // routes
