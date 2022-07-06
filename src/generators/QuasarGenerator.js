@@ -374,8 +374,9 @@ export default class extends BaseGenerator {
             (field) => field.name === exists
           );
           if (foundExistsFieldIndex !== -1) {
-            const param = fields[foundExistsFieldIndex];
+            const param = { ...fields[foundExistsFieldIndex] };
             param.variable = p.variable;
+            param.type = "other"; // Templates handle "exists" filters separately
             param.filterType = "exists";
             parameters.push(param);
           } else {
