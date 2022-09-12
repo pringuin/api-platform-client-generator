@@ -1,16 +1,26 @@
 #!/usr/bin/env node
 
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import "isomorphic-fetch";
-import program from "commander";
-import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
-import parseSwaggerDocumentation from "@api-platform/api-doc-parser/lib/swagger/parseSwaggerDocumentation";
-import parseOpenApi3Documentation from "@api-platform/api-doc-parser/lib/openapi3/parseOpenApi3Documentation";
-import { version } from "../package.json";
-import generators from "./generators";
+import { program } from "commander";
+import {
+  parseHydraDocumentation,
+  parseOpenApi3Documentation,
+  parseSwaggerDocumentation,
+} from "@api-platform/api-doc-parser";
+import generators from "./generators.js";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const packageJson = JSON.parse(
+  fs.readFileSync(`${dirname}/../package.json`, "utf-8")
+);
 
 async function main() {
   program
-    .version(version)
+    .version(packageJson.version)
     .description(
       "Generate apps built with Next, Nuxt, Quasar, React, React Native, Vue or Vuetify for any API documented using Hydra or OpenAPI"
     )
@@ -35,7 +45,7 @@ async function main() {
     .option(
       "-t, --template-directory [templateDirectory]",
       "The templates directory base to use. Final directory will be ${templateDirectory}/${generator}",
-      `${__dirname}/../templates/`
+      `${dirname}/../templates/`
     )
     .option(
       "-f, --format [hydra|openapi3|openapi2]",
@@ -50,8 +60,8 @@ async function main() {
 
   if (
     2 !== program.args.length &&
-    (!process.env.API_PLATFORM_CLIENT_GENERATOR_ENTRYPOINT ||
-      !process.env.API_PLATFORM_CLIENT_GENERATOR_OUTPUT)
+    (!process.env.API_PLATFORM_CREATE_CLIENT_ENTRYPOINT ||
+      !process.env.API_PLATFORM_CREATE_CLIENT_OUTPUT)
   ) {
     program.help();
   }
@@ -59,9 +69,9 @@ async function main() {
   const options = program.opts();
 
   const entrypoint =
-    program.args[0] || process.env.API_PLATFORM_CLIENT_GENERATOR_ENTRYPOINT;
+    program.args[0] || process.env.API_PLATFORM_CREATE_CLIENT_ENTRYPOINT;
   const outputDirectory =
-    program.args[1] || process.env.API_PLATFORM_CLIENT_GENERATOR_OUTPUT;
+    program.args[1] || process.env.API_PLATFORM_CREATE_CLIENT_OUTPUT;
 
   const entrypointWithSlash = entrypoint.endsWith("/")
     ? entrypoint
@@ -80,17 +90,19 @@ async function main() {
     : null;
 
   const parser = (entrypointWithSlash) => {
-    const hydraOptions = {};
+    // parserOptions are used to set headers on the hydra-requests
+    const parserOptions = {};
+    // options refers to the opts set via the CLI
     if (options.username && options.password) {
       const encoded = Buffer.from(
         `${options.username}:${options.password}`
       ).toString("base64");
-      hydraOptions.headers = new Headers();
-      hydraOptions.headers.set("Authorization", `Basic ${encoded}`);
+      parserOptions.headers = new Headers();
+      parserOptions.headers.set("Authorization", `Basic ${encoded}`);
     }
     if (options.bearer) {
-      hydraOptions.headers = new Headers();
-      hydraOptions.headers.set("Authorization", `Bearer ${options.bearer}`);
+      parserOptions.headers = new Headers();
+      parserOptions.headers.set("Authorization", `Bearer ${options.bearer}`);
     }
     switch (options.format) {
       case "swagger": // deprecated
@@ -99,7 +111,7 @@ async function main() {
       case "openapi3":
         return parseOpenApi3Documentation(entrypointWithSlash);
       default:
-        return parseHydraDocumentation(entrypointWithSlash, hydraOptions);
+        return parseHydraDocumentation(entrypointWithSlash, parserOptions);
     }
   };
 

@@ -1,15 +1,22 @@
 import { GetStaticPaths, GetStaticProps, NextComponentType, NextPageContext } from "next";
-import { Form } from "../../../components/{{{lc}}}/Form";
-import { {{{ucf}}} } from "../../../types/{{{ucf}}}";
-import { fetch } from "../../../utils/dataAccess";
-import Head from "next/head";
 import DefaultErrorPage from "next/error";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { dehydrate, QueryClient, useQuery } from "react-query";
 
-interface Props {
-  {{{lc}}}: {{{ucf}}};
-};
+import { Form } from "../../../components/{{{lc}}}/Form";
+import { PagedCollection } from "../../../types/collection";
+import { {{{ucf}}} } from "../../../types/{{{ucf}}}";
+import { fetch, FetchResponse, getPaths } from "../../../utils/dataAccess";
 
-const Page: NextComponentType<NextPageContext, Props, Props> = ({ {{{lc}}} }) => {
+const get{{{ucf}}} = async (id: string|string[]|undefined) => id ? await fetch<{{{ucf}}}>(`/{{{name}}}/${id}`) : Promise.resolve(undefined);
+
+const Page: NextComponentType<NextPageContext> = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const { data: { data: {{lc}} } = {} } = useQuery<FetchResponse<{{{ucf}}}> | undefined>(['{{{lc}}}', id], () => get{{{ucf}}}(id));
+
   if (!{{{lc}}}) {
     return <DefaultErrorPage statusCode={404} />;
   }
@@ -26,44 +33,22 @@ const Page: NextComponentType<NextPageContext, Props, Props> = ({ {{{lc}}} }) =>
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params: { id } = {} }) => {
+  if (!id) throw new Error('id not in query param');
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["{{{lc}}}", id], () => get{{{ucf}}}(id));
+
   return {
     props: {
-      {{{lc}}}: await fetch(`/{{{name}}}/${params.id}`),
+      dehydratedState: dehydrate(queryClient),
     },
     revalidate: 1,
   };
-}
+};
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  try {
-    const response = await fetch("/{{{name}}}");
-  } catch (e) {
-    console.error(e);
-
-    return {
-      paths: [],
-      fallback: true,
-    };
-  }
-
-  const view = response.data['{{{hydraPrefix}}}view'];
-  const paths = response.data["{{{hydraPrefix}}}member"].map(({{{lc}}}) => `${ {{~lc}}['@id'] }/edit`);
-
-  if (view) {
-    try {
-      const {
-        '{{{hydraPrefix}}}last': last
-      } = view;
-      for (let page = 2; page <= parseInt(last.replace(/^\/{{{name}}}\?page=(\d+)/, '$1')); page++) {
-        paths.concat(
-          await fetch(`/{{{name}}}?page=${page}`).data["{{{hydraPrefix}}}member"].map(({{{lc}}}) => `${ {{~lc}}['@id'] }/edit`)
-        );
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
+  const response = await fetch<PagedCollection<{{{ucf}}}>>("/{{{name}}}");
+  const paths = await getPaths(response, "{{{name}}}", '/{{{lc}}}s/[id]/edit');
 
   return {
     paths,

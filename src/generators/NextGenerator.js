@@ -1,5 +1,8 @@
 import chalk from "chalk";
-import BaseGenerator from "./BaseGenerator";
+import handlebars from "handlebars";
+import hbhComparison from "handlebars-helpers/lib/comparison.js";
+import hbhString from "handlebars-helpers/lib/string.js";
+import BaseGenerator from "./BaseGenerator.js";
 
 export default class NextGenerator extends BaseGenerator {
   constructor(params) {
@@ -8,6 +11,7 @@ export default class NextGenerator extends BaseGenerator {
     this.routeAddedtoServer = false;
     this.registerTemplates(`next/`, [
       // components
+      "components/common/Layout.tsx",
       "components/common/Pagination.tsx",
       "components/common/ReferenceLinks.tsx",
       "components/foo/List.tsx",
@@ -15,19 +19,24 @@ export default class NextGenerator extends BaseGenerator {
       "components/foo/Form.tsx",
 
       // types
-      "types/Collection.ts",
+      "types/collection.ts",
       "types/foo.ts",
+      "types/item.ts",
 
       // pages
       "pages/foos/[id]/index.tsx",
       "pages/foos/[id]/edit.tsx",
       "pages/foos/index.tsx",
       "pages/foos/create.tsx",
+      "pages/_app.tsx",
 
       // utils
       "utils/dataAccess.ts",
       "utils/mercure.ts",
     ]);
+
+    handlebars.registerHelper("compare", hbhComparison.compare);
+    handlebars.registerHelper("lowercase", hbhString.lowercase);
   }
 
   help(resource) {
@@ -52,6 +61,10 @@ export default class NextGenerator extends BaseGenerator {
       imports,
       hydraPrefix: this.hydraPrefix,
       title: resource.title,
+      hasRelations: fields.some((field) => field.reference || field.embedded),
+      hasManyRelations: fields.some(
+        (field) => field.isReferences || field.isEmbeddeds
+      ),
     };
 
     // Create directories
@@ -89,11 +102,16 @@ export default class NextGenerator extends BaseGenerator {
     // copy with regular name
     [
       // components
+      "components/common/Layout.tsx",
       "components/common/Pagination.tsx",
       "components/common/ReferenceLinks.tsx",
 
       // types
-      "types/Collection.ts",
+      "types/collection.ts",
+      "types/item.ts",
+
+      // pages
+      "pages/_app.tsx",
 
       // utils
       "utils/dataAccess.ts",
@@ -119,6 +137,9 @@ export default class NextGenerator extends BaseGenerator {
         return list;
       }
 
+      const isReferences = field.reference && field.maxCardinality !== 1;
+      const isEmbeddeds = field.embedded && field.maxCardinality !== 1;
+
       return {
         ...list,
         [field.name]: {
@@ -126,6 +147,9 @@ export default class NextGenerator extends BaseGenerator {
           type: this.getType(field),
           description: this.getDescription(field),
           readonly: false,
+          isReferences,
+          isEmbeddeds,
+          isRelations: isEmbeddeds || isReferences,
         },
       };
     }, {});

@@ -1,52 +1,60 @@
-import has from "lodash/has";
 import { useEffect, useState } from "react";
-import { PagedCollection } from "../types/Collection";
-import { normalize } from "./dataAccess";
+import { PagedCollection, isPagedCollection } from "../types/collection";
+import { Item, isItem } from "../types/item";
 
-const mercureSubscribe = (hubURL: string, data: unknown | PagedCollection<unknown>, setData: (data: unknown) => void) => {
+const mercureSubscribe = <T extends Item | PagedCollection<Item> | undefined>(
+  hubURL: string, data: T | PagedCollection<T>, setData: (data: T) => void
+) => {
+  if (!data || !data["@id"]) throw new Error('@id is missing');
+
   const url = new URL(hubURL, window.origin);
   url.searchParams.append("topic", (new URL(data["@id"], window.origin)).toString());
   const eventSource = new EventSource(url.toString());
-  eventSource.addEventListener("message", (event) => setData(normalize(JSON.parse(event.data))));
+  eventSource.addEventListener("message", (event) => setData(JSON.parse(event.data)));
 
   return eventSource;
 }
 
-export const useMercure = (deps: unknown | PagedCollection<unknown>, hubURL: string) => {
+export const useMercure = <TData extends Item | PagedCollection<Item> | undefined>(deps: TData, hubURL: string | null): TData => {
   const [data, setData] = useState(deps);
 
   useEffect(() => {
     setData(deps);
   }, [deps]);
 
-  if (!data) {
-    return data;
-  }
-
-  if (!has(data, "{{{hydraPrefix}}}member") && !has(data, "@id")) {
-    console.error("Object sent is not in JSON-LD format.");
-
-    return data;
-  }
-
   useEffect(() => {
-    if (has(data, "{{{hydraPrefix}}}member") && Array.isArray(data["{{{hydraPrefix}}}member"]) && data["{{{hydraPrefix}}}member"].length !== 0) {
-      // It's a PagedCollection
-      data["{{{hydraPrefix}}}member"].forEach((obj, pos) => mercureSubscribe(hubURL, obj, (datum) => {
-        data["{{{hydraPrefix}}}member"][pos] = datum;
-        setData(data);
-      }));
+    if (!hubURL || !data) {
+      return;
+    }
 
-      return () => data;
+    if (!isPagedCollection<Item>(data) && !isItem(data)) {
+      console.error("Object sent is not in JSON-LD format.");
+
+      return;
+    }
+
+    if (isPagedCollection<Item>(data) && data["{{{hydraPrefix}}}member"] && data["{{{hydraPrefix}}}member"].length !== 0) {
+      const eventSources: EventSource[] = [];
+      // It's a PagedCollection
+      data["{{{hydraPrefix}}}member"].forEach((obj, pos) => {
+        eventSources.push(mercureSubscribe(hubURL, obj, (datum) => {
+          if (data["{{{hydraPrefix}}}member"]) {
+            data["{{{hydraPrefix}}}member"][pos] = datum;
+          }
+          setData({ ...data });
+        }));
+      });
+
+      return () => {
+        eventSources.forEach((eventSource) => eventSource.close());
+      };
     }
 
     // It's a single object
-    const eventSource = mercureSubscribe(hubURL, data, setData);
+    const eventSource = mercureSubscribe<TData>(hubURL, data, setData);
 
     return () => {
-      eventSource.removeEventListener("message", (event) => setData(normalize(JSON.parse(event.data))));
-
-      return data;
+      eventSource.close();
     };
   }, [data]);
 

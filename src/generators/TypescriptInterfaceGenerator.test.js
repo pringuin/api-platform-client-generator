@@ -1,11 +1,15 @@
-import { Api, Resource, Field } from "@api-platform/api-doc-parser/lib";
+import { Api, Resource, Field } from "@api-platform/api-doc-parser";
+import path from "path";
+import { fileURLToPath } from "url";
 import fs from "fs";
 import tmp from "tmp";
-import TypescriptInterfaceGenerator from "./TypescriptInterfaceGenerator";
+import TypescriptInterfaceGenerator from "./TypescriptInterfaceGenerator.js";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 test("Generate a typescript interface", () => {
   const generator = new TypescriptInterfaceGenerator({
-    templateDirectory: `${__dirname}/../../templates`,
+    templateDirectory: `${dirname}/../../templates`,
   });
   const tmpobj = tmp.dirSync({ unsafeCleanup: true });
 
@@ -64,7 +68,7 @@ test("Generate a typescript interface", () => {
 
 test("Generate a typescript interface without references to other interfaces", () => {
   const generator = new TypescriptInterfaceGenerator({
-    templateDirectory: `${__dirname}/../../templates`,
+    templateDirectory: `${dirname}/../../templates`,
   });
   const tmpobj = tmp.dirSync({ unsafeCleanup: true });
 
@@ -114,7 +118,7 @@ test("Generate a typescript interface without references to other interfaces", (
 
 test("Generate a typescript interface with an explicit id field in the readableFields", () => {
   const generator = new TypescriptInterfaceGenerator({
-    templateDirectory: `${__dirname}/../../templates`,
+    templateDirectory: `${dirname}/../../templates`,
   });
   const tmpobj = tmp.dirSync({ unsafeCleanup: true });
 
@@ -165,6 +169,64 @@ test("Generate a typescript interface with an explicit id field in the readableF
 `;
   expect(
     fs.readFileSync(tmpobj.name + "/interfaces/foo.ts").toString()
+  ).toEqual(res);
+
+  tmpobj.removeCallback();
+});
+
+test("Generate a typescript interface with invalid JS identifiers for fields and title", () => {
+  const generator = new TypescriptInterfaceGenerator({
+    templateDirectory: `${dirname}/../../templates`,
+  });
+  const tmpobj = tmp.dirSync({ unsafeCleanup: true });
+
+  const resource = new Resource("abc", "http://example.com/foos", {
+    id: "foo",
+    title: "Foo-foo",
+    readableFields: [
+      new Field("bar-bar", {
+        id: "http://schema.org/url",
+        range: "http://www.w3.org/2001/XMLSchema#string",
+        reference: null,
+        required: true,
+        description: "An URL",
+      }),
+      new Field("id", {
+        id: "http://schema.org/url",
+        range: "http://www.w3.org/2001/XMLSchema#string",
+        reference: null,
+        required: false,
+        description: "Id",
+      }),
+    ],
+    writableFields: [
+      new Field("foo-foo", {
+        id: "http://schema.org/url",
+        range: "http://www.w3.org/2001/XMLSchema#datetime",
+        reference: null,
+        required: true,
+        description: "An URL",
+      }),
+    ],
+  });
+  const api = new Api("http://example.com", {
+    entrypoint: "http://example.com:8080",
+    title: "My API",
+    resources: [resource],
+  });
+  generator.generate(api, resource, tmpobj.name);
+
+  expect(fs.existsSync(tmpobj.name + "/interfaces/foo-foo.ts")).toBe(true);
+
+  const res = `export interface Foo_foo {
+  "@id"?: string;
+  "foo-foo": any;
+  readonly "bar-bar": string;
+  readonly id?: string;
+}
+`;
+  expect(
+    fs.readFileSync(tmpobj.name + "/interfaces/foo-foo.ts").toString()
   ).toEqual(res);
 
   tmpobj.removeCallback();

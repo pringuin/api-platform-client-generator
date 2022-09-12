@@ -1,14 +1,14 @@
-# API Platform Client Generator
+# API Platform Create Client
 
-[![Build Status](https://travis-ci.org/api-platform/client-generator.svg?branch=master)](https://travis-ci.org/api-platform/client-generator)
-[![npm version](https://badge.fury.io/js/%40api-platform%2Fclient-generator.svg)](https://badge.fury.io/js/%40api-platform%2Fclient-generator)
+[![GitHub Actions](https://github.com/api-platform/create-client/workflows/CI/badge.svg)](https://github.com/api-platform/create-client/actions?workflow=CI)
+[![npm version](https://badge.fury.io/js/%40api-platform%2Fcreate-client.svg)](https://badge.fury.io/js/%40api-platform%2Fcreate-client)
 
-API Platform Client Generator is a generator to scaffold app with Create-Retrieve-Update-Delete features for any API exposing a [Hydra](http://www.hydra-cg.com/spec/latest/core/) or [OpenAPI](https://www.openapis.org/) documentation for:
+API Platform Create Client is a generator to scaffold apps with Create-Retrieve-Update-Delete features for any API exposing a [Hydra](http://www.hydra-cg.com/spec/latest/core/) or [OpenAPI](https://www.openapis.org/) documentation for:
 
 * Next.js
-* Nuxt.js
-* Quasar Framework
-* React/Redux
+* Nuxt
+* Quasar
+* React
 * React Native
 * TypeScript Interfaces
 * Vue.js
@@ -18,7 +18,7 @@ Works especially well with APIs built with the [API Platform](https://api-platfo
 
 ## Documentation
 
-The documentation of API Platform's Client Generator can be browsed [on the official website](https://api-platform.com/docs/client-generator).
+The documentation of API Platform Create Client can be browsed [on the official website](https://api-platform.com/docs/create-client).
 
 ## Features
 
@@ -27,13 +27,13 @@ The documentation of API Platform's Client Generator can be browsed [on the offi
   * Creation form
   * Editing form
   * Deletion button
-* Use the Hydra or OpenAPI documentations to generate the code
-* Generate the suitable HTML5 input type (`number`, `date`...) according to the type of the API property
+* Use the Hydra or OpenAPI documentation to generate the code
+* Generate the suitable input type (`number`, `date`...) according to the type of the API property
 * Display of the server-side validation errors under the related input (if using API Platform Core)
 * Client-side validation (`required` attributes)
 * The generated HTML is compatible with [Bootstrap](https://getbootstrap.com/) and includes mandatory classes
 * The generated HTML code is accessible to people with disabilities ([ARIA](https://www.w3.org/WAI/intro/aria) support)
-
+* Bring your own templates
 
 ## Setup for development
 
@@ -53,17 +53,16 @@ Note that you'll need node v 16+ with npx 8+.
 
 ### Hydra
 
-    npx @api-platform/client-generator https://demo.api-platform.com/ output/ --resource Book
+    npm init @api-platform/client https://demo.api-platform.com/ output/ --resource Book
 
-### OpenAPI v3 (experimental)
+### OpenAPI 3
 
-    npx @api-platform/client-generator https://demo.api-platform.com/docs.json?spec_version=3 output/ --resource Book --format openapi3
-
-### OpenAPI v2 (formerly known as Swagger, deprecated)
-
-    npx @api-platform/client-generator https://demo.api-platform.com/docs.json?spec_version=2 output/ --resource Book --format openapi2
+    npm init @api-platform/client https://demo.api-platform.com/docs.json output/ --resource Book --format openapi3
 
 ## Credits
 
-Created by [Kévin Dunglas](https://dunglas.fr). Sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
-Commercial support available upon request.
+Created by [Kévin Dunglas](https://dunglas.fr).
+
+Sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
+
+Commercial support is available upon request.

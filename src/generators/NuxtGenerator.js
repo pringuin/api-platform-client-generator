@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import BaseVueGenerator from "./VueBaseGenerator";
+import BaseVueGenerator from "./VueBaseGenerator.js";
 
 export default class NuxtGenerator extends BaseVueGenerator {
   constructor(params) {
@@ -25,9 +25,10 @@ export default class NuxtGenerator extends BaseVueGenerator {
       "mixins/update.js",
 
       // pages
-      "pages/foos/new.vue",
+      "pages/foos/create.vue",
       "pages/foos/index.vue",
-      "pages/foos/_id.vue",
+      "pages/foos/_id/edit.vue",
+      "pages/foos/_id/index.vue",
 
       // store
       "store/crud.js",
@@ -106,9 +107,13 @@ export default class NuxtGenerator extends BaseVueGenerator {
 
     this.createEntrypoint(api.entrypoint, `${dir}/config/entrypoint.js`);
 
-    for (let dir of [`${dir}/components/${lc}`, `${dir}/pages/${lc}s`]) {
+    [
+      `${dir}/components/${lc}`,
+      `${dir}/pages/${lc}s`,
+      `${dir}/pages/${lc}s/_id`,
+    ].forEach((dir) => {
       this.createDir(dir);
-    }
+    });
 
     this.createFile("services/api.js", `${dir}/services/api.js`, {}, false);
 
@@ -118,9 +123,10 @@ export default class NuxtGenerator extends BaseVueGenerator {
       "components/%s/Form.vue",
 
       // pages
-      "pages/%ss/new.vue",
+      "pages/%ss/create.vue",
       "pages/%ss/index.vue",
-      "pages/%ss/_id.vue",
+      "pages/%ss/_id/edit.vue",
+      "pages/%ss/_id/index.vue",
 
       // service
       "services/%s.js",

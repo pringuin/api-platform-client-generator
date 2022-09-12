@@ -1,10 +1,10 @@
 import chalk from "chalk";
 import fs from "fs";
-import BaseGenerator from "./BaseGenerator";
 import handlebars from "handlebars";
-import hbh_comparison from "handlebars-helpers/lib/comparison";
-import hbh_array from "handlebars-helpers/lib/array";
-import hbh_string from "handlebars-helpers/lib/string";
+import hbh_comparison from "handlebars-helpers/lib/comparison.js";
+import hbh_array from "handlebars-helpers/lib/array.js";
+import hbh_string from "handlebars-helpers/lib/string.js";
+import BaseGenerator from "./BaseGenerator.js";
 
 export default class extends BaseGenerator {
   constructor(params) {
@@ -205,7 +205,7 @@ export default class extends BaseGenerator {
     handlebars.registerHelper("ifOdd", hbh_comparison.ifOdd);
     handlebars.registerHelper("inArray", hbh_array.inArray);
     handlebars.registerHelper("forEach", hbh_array.forEach);
-    handlebars.registerHelper("downcase", hbh_string.downcase);
+    handlebars.registerHelper("lowercase", hbh_string.lowercase);
     handlebars.registerHelper("capitalize", hbh_string.capitalize);
 
     this.registerSwitchHelper();
@@ -464,7 +464,7 @@ export default class extends BaseGenerator {
       this.createDir(newDir);
     }
 
-    for (let common of [
+    [
       "common/components/index.js",
       "common/components/ActionCell.vue",
       "common/components/Breadcrumb.vue",
@@ -510,11 +510,11 @@ export default class extends BaseGenerator {
       "utils/dates.js",
       "utils/notify.js",
       "utils/vuexer.js",
-    ]) {
-      this.createFile(common, `${dir}/${common}`, context, false);
-    }
+    ].forEach((common) =>
+      this.createFile(common, `${dir}/${common}`, context, false)
+    );
 
-    for (let pattern of [
+    [
       // modules
       "store/modules/%s/index.js",
       "store/modules/%s/create/actions.js",
@@ -560,15 +560,15 @@ export default class extends BaseGenerator {
 
       // routes
       "router/%s.js",
-    ]) {
+    ].forEach((pattern) => {
       if (
         pattern === "components/%s/Filter.vue" &&
         !context.parameters.length
       ) {
-        continue;
+        return;
       }
       this.createFileFromPattern(pattern, dir, lc, context);
-    }
+    });
 
     // error
     this.createFile(

@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import handlebars from "handlebars";
-import BaseGenerator from "./BaseGenerator";
+import BaseGenerator from "./BaseGenerator.js";
 
 export default class extends BaseGenerator {
   constructor(params) {
@@ -12,6 +12,11 @@ export default class extends BaseGenerator {
       }
       return options.inverse(this);
     });
+
+    this.registerTemplates("common/", [
+      // utils
+      "utils/mercure.js",
+    ]);
 
     this.registerTemplates(`react-common/`, [
       // actions
@@ -133,6 +138,7 @@ combineReducers({ ${titleLc}, /* ... */ }),
 
     [
       "utils/dataAccess.js",
+      "utils/mercure.js",
       "utils/helpers.js",
       "components/Spinner.js",
       "components/Confirm.js",

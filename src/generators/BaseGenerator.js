@@ -42,15 +42,18 @@ export default class {
     }
   }
 
-  createFileFromPattern(pattern, dir, lc, context) {
-    const moduleTemplate = sprintf(pattern, lc);
+  createFileFromPattern(pattern, dir, value, context, templateValue = "foo") {
+    let moduleTemplate = sprintf(pattern, value);
     const hasModuleTemplate = undefined !== this.templates[moduleTemplate];
-    if (hasModuleTemplate)
-      console.log(lc, " - ", pattern, "\tuses a custom override");
+    if (hasModuleTemplate) {
+      console.log(value, " - ", pattern, "\tuses a custom override");
+    } else {
+      moduleTemplate = sprintf(pattern, templateValue);
+    }
 
     this.createFile(
-      hasModuleTemplate ? moduleTemplate : sprintf(pattern, "foo"),
-      sprintf(`${dir}/${pattern}`, lc),
+      moduleTemplate,
+      sprintf(`${dir}/${pattern}`, value),
       context,
       hasModuleTemplate
     );
