@@ -340,6 +340,10 @@ export default class extends BaseGenerator {
 
   generateFiles(api, resource, dir, params) {
     const lc = resource.title.toLowerCase();
+    const nameUcFirst = resource.name
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
     const titleUcFirst =
       resource.title.charAt(0).toUpperCase() + resource.title.slice(1);
 
@@ -413,6 +417,7 @@ export default class extends BaseGenerator {
     const context = {
       title: resource.title,
       name: resource.name,
+      nameUcFirst,
       lc,
       uc: resource.title.toUpperCase(),
       fields,
