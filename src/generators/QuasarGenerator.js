@@ -430,7 +430,7 @@ export default class extends BaseGenerator {
 
     // Create directories
     // These directories may already exist
-    for (let newDir of [
+    [
       `${dir}/config`,
       `${dir}/error`,
       `${dir}/router`,
@@ -447,11 +447,11 @@ export default class extends BaseGenerator {
       `${dir}/common/store/list`,
       `${dir}/common/store/show`,
       `${dir}/common/store/update`,
-    ]) {
+    ].forEach((newDir) => {
       this.createDir(newDir, false);
-    }
+    });
 
-    for (let newDir of [
+    [
       `${dir}/store/modules/${lc}`,
       `${dir}/store/modules/${lc}/create`,
       `${dir}/store/modules/${lc}/delete`,
@@ -460,9 +460,9 @@ export default class extends BaseGenerator {
       `${dir}/store/modules/${lc}/update`,
 
       `${dir}/components/${lc}`,
-    ]) {
+    ].forEach((newDir) => {
       this.createDir(newDir);
-    }
+    });
 
     [
       "common/components/index.js",

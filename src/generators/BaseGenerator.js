@@ -44,7 +44,8 @@ export default class {
 
   createFileFromPattern(pattern, dir, value, context, templateValue = "foo") {
     let moduleTemplate = sprintf(pattern, value);
-    const hasModuleTemplate = undefined !== this.templates[moduleTemplate];
+    const hasModuleTemplate =
+      undefined !== this.templates[moduleTemplate] && value !== templateValue;
     if (hasModuleTemplate) {
       console.log(value, " - ", pattern, "\tuses a custom override");
     } else {
