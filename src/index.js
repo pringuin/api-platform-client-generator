@@ -100,7 +100,7 @@ async function main() {
       parserOptions.headers = new Headers();
       parserOptions.headers.set("Authorization", `Basic ${encoded}`);
     }
-    if (options.bearer) {
+    if (options.bearer && typeof options.bearer === "string") {
       parserOptions.headers = new Headers();
       parserOptions.headers.set("Authorization", `Bearer ${options.bearer}`);
     }
