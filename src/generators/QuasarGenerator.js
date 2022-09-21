@@ -10,6 +10,8 @@ export default class extends BaseGenerator {
   constructor(params) {
     super(params);
 
+    this.generatorclass = "quasar";
+
     // Register common templates
     this.registerTemplates(`quasar/`, [
       // common for modules

@@ -3,7 +3,8 @@ import fs from "fs";
 import handlebars from "handlebars";
 import mkdirp from "mkdirp";
 import { sprintf } from "sprintf-js";
-// import prettier from "prettier";
+import prettier from "prettier";
+// import standard from "standard";
 
 export default class {
   templates = {};
@@ -60,7 +61,7 @@ export default class {
     );
   }
 
-  createFile(template, dest, context = {}, warn = true) {
+  /* async */ createFile(template, dest, context = {}, warn = true) {
     if (undefined === this.templates[template]) {
       console.log(
         `The template ${template} does not exists in the registered templates.`
@@ -71,11 +72,19 @@ export default class {
 
     // Format the generated code using Prettier
     let content = this.templates[template](context);
-    // if (template.endsWith(".js")) {
-    //   content = prettier.format(content, { parser: "babel" });
-    // } else if (template.endsWith(".ts") || template.endsWith(".tsx")) {
-    //   content = prettier.format(content, { parser: "babel-ts" });
-    // }
+    if (this.generatorclass === "quasar") {
+      // TODO: Lint with standard
+      // const linted = await standard.lintText(content, {
+      //   fix: true,
+      // });
+      // console.log(linted[0]);
+    } else {
+      if (template.endsWith(".js")) {
+        content = prettier.format(content, { parser: "babel" });
+      } else if (template.endsWith(".ts") || template.endsWith(".tsx")) {
+        content = prettier.format(content, { parser: "babel-ts" });
+      }
+    }
 
     if (!fs.existsSync(dest)) {
       fs.writeFileSync(dest, content);
