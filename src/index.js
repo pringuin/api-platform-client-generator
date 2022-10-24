@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import "isomorphic-fetch";
 import { program } from "commander";
 import {
+  fetchJsonLd,
   parseHydraDocumentation,
   parseOpenApi3Documentation,
   parseSwaggerDocumentation,
@@ -89,9 +90,9 @@ async function main() {
     ? options.serverPath.toLowerCase()
     : null;
 
+  const parserOptions = {};
   const parser = (entrypointWithSlash) => {
     // parserOptions are used to set headers on the hydra-requests
-    const parserOptions = {};
     // options refers to the opts set via the CLI
     if (options.username && options.password) {
       const encoded = Buffer.from(
@@ -120,6 +121,7 @@ async function main() {
 
   parser(entrypointWithSlash)
     .then((ret) => {
+      console.log(ret);
       ret.api.resources
         .filter(({ deprecated }) => !deprecated)
         .filter((resource) => {
@@ -140,16 +142,37 @@ async function main() {
           resource.readableFields = filterDeprecated(resource.readableFields);
           resource.writableFields = filterDeprecated(resource.writableFields);
 
-          generator
-            .generate(ret.api, resource, outputDirectory, serverPath)
-            .then(() => {
-              if (
-                !index &&
-                generator.generateImportHelper &&
-                typeof generator.generateImportHelper === "function"
-              ) {
-                generator.generateImportHelper(array, outputDirectory);
-              }
+          // Load additional info from the hydra context. This'll hold info
+          // about whether or not this is an enum, and what values it can hold
+          const url = `${ret.api.entrypoint}/contexts/${resource.title}`;
+
+          fetchJsonLd(url, options)
+            .then((response) => response?.body?.["@context"])
+            .then((hydraContext) => {
+              // We only use writableFields to generate inputs, so check for
+              // each one if there's additional hydra data and inject if necessary
+              resource.writableFields.forEach((field) => {
+                const extraInfo = hydraContext?.[field.name];
+                if (extraInfo?.enum != null) {
+                  field.enumData = {
+                    options: extraInfo.enum,
+                    type: extraInfo.type,
+                    default: extraInfo.default,
+                  };
+                }
+              });
+
+              generator
+                .generate(ret.api, resource, outputDirectory, serverPath)
+                .then(() => {
+                  if (
+                    !index &&
+                    generator.generateImportHelper &&
+                    typeof generator.generateImportHelper === "function"
+                  ) {
+                    generator.generateImportHelper(array, outputDirectory);
+                  }
+                });
             });
 
           return resource;
