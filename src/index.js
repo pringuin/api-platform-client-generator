@@ -149,18 +149,7 @@ async function main() {
           fetchJsonLd(url, options)
             .then((response) => response?.body?.["@context"])
             .then((hydraContext) => {
-              // We only use writableFields to generate inputs, so check for
-              // each one if there's additional hydra data and inject if necessary
-              resource.writableFields.forEach((field) => {
-                const extraInfo = hydraContext?.[field.name];
-                if (extraInfo?.enum != null) {
-                  field.enumData = {
-                    options: extraInfo.enum,
-                    type: extraInfo.type,
-                    default: extraInfo.default,
-                  };
-                }
-              });
+              resource.hydraContext = hydraContext;
 
               generator
                 .generate(ret.api, resource, outputDirectory, serverPath)
