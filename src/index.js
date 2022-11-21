@@ -90,8 +90,8 @@ async function main() {
     ? options.serverPath.toLowerCase()
     : null;
 
-  const parserOptions = {};
   const parser = (entrypointWithSlash) => {
+    const parserOptions = {};
     // parserOptions are used to set headers on the hydra-requests
     // options refers to the opts set via the CLI
     if (options.username && options.password) {
@@ -121,7 +121,6 @@ async function main() {
 
   parser(entrypointWithSlash)
     .then((ret) => {
-      console.log(ret);
       ret.api.resources
         .filter(({ deprecated }) => !deprecated)
         .filter((resource) => {
@@ -155,9 +154,8 @@ async function main() {
                 .generate(ret.api, resource, outputDirectory, serverPath)
                 .then(() => {
                   if (
-                    !index &&
-                    generator.generateImportHelper &&
-                    typeof generator.generateImportHelper === "function"
+                    index === 0 &&
+                    typeof generator?.generateImportHelper === "function"
                   ) {
                     generator.generateImportHelper(array, outputDirectory);
                   }
