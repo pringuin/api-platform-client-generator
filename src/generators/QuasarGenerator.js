@@ -112,6 +112,7 @@ export default class extends BaseGenerator {
 
       // components
       "components/foo/Create.vue",
+      "components/foo/Delete.vue",
       "components/foo/Filter.vue",
       "components/foo/Form.vue",
       "components/foo/List.vue",
@@ -179,6 +180,7 @@ export default class extends BaseGenerator {
       .forEach((componentModule) => {
         [
           `components/${componentModule}/Create.vue`,
+          `components/${componentModule}/Delete.vue`,
           `components/${componentModule}/Filter.vue`,
           `components/${componentModule}/Form.vue`,
           `components/${componentModule}/List.vue`,
@@ -604,6 +606,7 @@ export default class extends BaseGenerator {
 
       // components
       "components/%s/Create.vue",
+      "components/%s/Delete.vue",
       "components/%s/Filter.vue",
       "components/%s/Form.vue",
       "components/%s/List.vue",
