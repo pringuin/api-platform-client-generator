@@ -276,15 +276,60 @@ export default class extends BaseGenerator {
     return resource
       .getParameters()
       .then((params) => {
-        params = params.map((param) => ({
-          ...param,
-          ...this.getHtmlInputTypeFromField(param),
-        }));
+        params = params.map((param) => {
+          const extended = {
+            ...param,
+            ...this.getHtmlInputTypeFromField(param),
+          };
+          // resource has no hydracontext, return early
+          if (!resource.hydraContext) return extended;
+
+          const enumDataKey = Object.keys(resource.hydraContext).find((key) =>
+            param.variable.startsWith(key)
+          );
+          // param has no matching entry in hydracontext, return early
+          if (!enumDataKey) return extended;
+
+          // add hydracontext to param
+          const extraInfo = resource.hydraContext[enumDataKey];
+
+          if (extraInfo?.enum == null) return extended;
+
+          extended.enumData = {
+            options: extraInfo.enum,
+            type: extraInfo.type,
+            default: extraInfo.default,
+          };
+
+          return extended;
+        });
+
+        // We only use writableFields to generate inputs, so check for
+        // each one if there's additional hydra data and inject if necessary
+        for (const field of resource.writableFields) {
+          const extraInfo = resource.hydraContext?.[field.name];
+
+          if (extraInfo?.enum == null) continue;
+
+          field.enumData = {
+            options: extraInfo.enum,
+            type: extraInfo.type,
+            default: extraInfo.default,
+          };
+        }
 
         params = this.cleanupParams(params);
+
         this.generateFiles(api, resource, dir, params);
       })
-      .catch((e) => console.log(chalk.red(e)));
+      .catch((e) => {
+        const eString = JSON.stringify(e, null, 4);
+        console.log(
+          chalk.red(
+            `Error running Genrator for ${resource.name}: ${eString} ${e}`
+          )
+        );
+      });
   }
 
   cleanupParams(params) {
