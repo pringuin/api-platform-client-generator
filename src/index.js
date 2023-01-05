@@ -145,7 +145,14 @@ async function main() {
           // about whether or not this is an enum, and what values it can hold
           const url = `${ret.api.entrypoint}/contexts/${resource.title}`;
 
-          fetchJsonLd(url, options)
+          const fetchOpts = {};
+          if (options.bearer) {
+            fetchOpts.headers = {
+              Authorization: `Bearer ${options.bearer}`,
+            };
+          }
+
+          fetchJsonLd(url, fetchOpts)
             .then((response) => response?.body?.["@context"])
             .then((hydraContext) => {
               resource.hydraContext = hydraContext;
@@ -160,6 +167,9 @@ async function main() {
                     generator.generateImportHelper(array, outputDirectory);
                   }
                 });
+            })
+            .catch((error) => {
+              console.log("Error during generation", error);
             });
 
           return resource;
