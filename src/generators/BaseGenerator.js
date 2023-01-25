@@ -136,6 +136,9 @@ export default class {
       case "http://schema.org/url":
         return { type: "url" };
 
+      case "http://schema.org/accessCode":
+        return { type: "password" };
+
       case this.entrypointWithSlash + "color": // fall through
       case "http://schema.org/color":
         return { type: "color" };
