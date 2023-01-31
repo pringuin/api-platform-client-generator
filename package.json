@@ -54,7 +54,7 @@
     "standard": "^17.0.0"
   },
   "scripts": {
-    "prepare": "husky install",
+    "_prepare": "husky install",
     "test": "jest src",
     "lint": "eslint src",
     "fix": "eslint --fix src",
