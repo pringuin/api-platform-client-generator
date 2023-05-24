@@ -410,6 +410,8 @@ export default class extends BaseGenerator {
 
     const formContainsColor = formFields.some((e) => e.type === "color");
 
+    const formContainsHTML = formFields.some((e) => e.type === "html");
+
     const fields = this.buildFields(resource.readableFields);
     const listContainsDate = fields.some((e) => dateTypes.includes(e.type));
 
@@ -481,6 +483,7 @@ export default class extends BaseGenerator {
       formContainsDate,
       formContainsRef,
       formContainsColor,
+      formContainsHTML,
       hydraPrefix: this.hydraPrefix,
       titleUcFirst,
       labels,
