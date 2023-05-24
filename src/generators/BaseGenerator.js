@@ -145,6 +145,12 @@ export default class {
       case this.entrypointWithSlash + "color": // fall through
       case "http://schema.org/color":
         return { type: "color" };
+
+      case "http://www.w3.org/2001/XMLSchema#date":
+        return { type: "date" };
+
+      case "http://www.w3.org/2001/XMLSchema#time":
+        return { type: "time" };
     }
 
     const fieldRange = (field.range || "").replace("https://", "http://");
