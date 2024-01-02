@@ -63,9 +63,9 @@ export default class {
 
   /* async */ createFile(template, dest, context = {}, warn = true) {
     if (undefined === this.templates[template]) {
-      console.log(
-        `The template ${template} does not exists in the registered templates.`
-      );
+      // console.log(
+      //   `The template ${template} does not exists in the registered templates.`
+      // );
 
       return;
     }
