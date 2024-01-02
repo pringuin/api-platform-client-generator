@@ -216,6 +216,8 @@ export default class extends BaseGenerator {
     handlebars.registerHelper("append", hbh_string.append);
     handlebars.registerHelper("filter", hbh_array.filter);
     handlebars.registerHelper("pluck", hbh_array.pluck);
+    handlebars.registerHelper("camelcase", hbh_string.camelcase);
+    handlebars.registerHelper("snakecase", hbh_string.snakecase);
 
     this.registerSwitchHelper();
   }
