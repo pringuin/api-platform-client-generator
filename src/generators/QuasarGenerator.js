@@ -124,6 +124,9 @@ export default class extends BaseGenerator {
 
       // routes
       "router/foo.js",
+
+      // pinia store
+      "stores/foo.js",
     ]);
 
     // try and register resource specific template overrides
@@ -204,6 +207,13 @@ export default class extends BaseGenerator {
       .forEach((routeModule) => {
         console.log("found custom template:", routeModule);
         this.registerTemplates(`quasar/`, [`router/${routeModule}`]);
+      });
+
+    fs.readdirSync(`${this.templateDirectory}/quasar/stores/`)
+      .filter((foundDir) => foundDir !== "foo.js")
+      .forEach((routeModule) => {
+        console.log("found custom template:", routeModule);
+        this.registerTemplates(`quasar/`, [`stores/${routeModule}`]);
       });
 
     handlebars.registerHelper("compare", hbh_comparison.compare);
@@ -498,6 +508,7 @@ export default class extends BaseGenerator {
       `${dir}/config`,
       `${dir}/error`,
       `${dir}/router`,
+      `${dir}/stores`,
       `${dir}/utils`,
       `${dir}/i18n`,
       `${dir}/i18n/en-us`,
@@ -626,6 +637,9 @@ export default class extends BaseGenerator {
 
       // routes
       "router/%s.js",
+
+      // pinia store
+      "stores/%s.js",
     ].forEach((pattern) => {
       if (
         pattern === "components/%s/Filter.vue" &&
