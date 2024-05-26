@@ -87,6 +87,14 @@ export default class {
     }
 
     if (!fs.existsSync(dest)) {
+      let dir = dest.split("/");
+      dir.pop();
+      dir = dir.join("/");
+
+      if (!fs.existsSync(dir)) {
+        mkdirp.sync(dir);
+      }
+
       fs.writeFileSync(dest, content);
 
       return;

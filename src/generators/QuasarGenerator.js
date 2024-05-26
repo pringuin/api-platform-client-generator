@@ -501,7 +501,7 @@ export default class extends BaseGenerator {
       labels,
       hashEntry,
     };
-
+    /* 
     // Create directories
     // These directories may already exist
     [
@@ -537,7 +537,7 @@ export default class extends BaseGenerator {
       `${dir}/components/${lc}`,
     ].forEach((newDir) => {
       this.createDir(newDir);
-    });
+    }); */
 
     [
       "common/components/index.js",
