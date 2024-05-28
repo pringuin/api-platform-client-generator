@@ -66,6 +66,9 @@ export default class extends BaseGenerator {
       "utils/fetch.js",
       "utils/dates.js",
       "utils/importHelper.js",
+      "utils/allRoutes.js",
+      "utils/allTranslations.js",
+      "utils/allVuexStores.js",
       "utils/notify.js",
       "utils/vuexer.js",
 
@@ -697,6 +700,36 @@ export default class extends BaseGenerator {
     this.createFile(
       "utils/importHelper.js",
       `${dir}/utils/importHelper.js`,
+      {
+        modules: modules,
+        dir: dir,
+      },
+      false
+    );
+
+    this.createFile(
+      "utils/allRoutes.js",
+      `${dir}/utils/allRoutes.js`,
+      {
+        modules: modules,
+        dir: dir,
+      },
+      false
+    );
+
+    this.createFile(
+      "utils/allTranslations.js",
+      `${dir}/utils/allTranslations.js`,
+      {
+        modules: modules,
+        dir: dir,
+      },
+      false
+    );
+
+    this.createFile(
+      "utils/allVuexStores.js",
+      `${dir}/utils/allVuexStores.js`,
       {
         modules: modules,
         dir: dir,
