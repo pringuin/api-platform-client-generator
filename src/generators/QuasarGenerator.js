@@ -66,6 +66,7 @@ export default class extends BaseGenerator {
       "utils/fetch.js",
       "utils/dates.js",
       "utils/importHelper.js",
+      "utils/allPiniaStores.js",
       "utils/allRoutes.js",
       "utils/allTranslations.js",
       "utils/allVuexStores.js",
@@ -644,9 +645,6 @@ export default class extends BaseGenerator {
 
       // routes
       "router/%s.js",
-
-      // pinia store
-      "stores/%s.js",
     ].forEach((pattern) => {
       if (
         pattern === "components/%s/Filter.vue" &&
@@ -655,6 +653,13 @@ export default class extends BaseGenerator {
         return;
       }
       this.createFileFromPattern(pattern, dir, lc, context);
+    });
+
+    [
+      // pinia store
+      "stores/%s.js",
+    ].forEach((pattern) => {
+      this.createFileFromPattern(pattern, dir, resource.name, context);
     });
 
     // error
@@ -739,6 +744,21 @@ export default class extends BaseGenerator {
         dir: dir,
       },
       false
+    );
+
+    const piniaStoreData = resources.map((resource) => ({
+      apiPrefix: resource.name,
+      title: resource.title,
+    }));
+
+    this.createFile(
+      "utils/allPiniaStores.js",
+      `${dir}/utils/allPiniaStores.js`,
+      {
+        piniaStoreData,
+        dir: dir,
+      }
+      // false
     );
   }
 
