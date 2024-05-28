@@ -478,6 +478,9 @@ export default class extends BaseGenerator {
     const paramsHaveRefs = parameters.some(
       (e) => e.type === "text" && e.reference
     );
+    const paramsHaveEnums = parameters.some(
+      (e) => e.type === "text" && e.enumData
+    );
 
     const labels = this.commonLabelTexts();
 
@@ -493,6 +496,7 @@ export default class extends BaseGenerator {
       dateTypes,
       listContainsDate,
       paramsHaveRefs,
+      paramsHaveEnums,
       parameters,
       formFields,
       formContainsDate,
