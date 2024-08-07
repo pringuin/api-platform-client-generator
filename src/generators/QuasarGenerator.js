@@ -124,6 +124,7 @@ export default class extends BaseGenerator {
       "components/foo/Update.vue",
       "components/foo/Show.vue",
       "components/foo/Search.vue",
+      "components/foo/Select.vue",
       "components/foo/settings.js",
 
       // routes
@@ -195,6 +196,7 @@ export default class extends BaseGenerator {
           `components/${componentModule}/Update.vue`,
           `components/${componentModule}/Show.vue`,
           `components/${componentModule}/Search.vue`,
+          `components/${componentModule}/Select.vue`,
           `components/${componentModule}/settings.js`,
         ].forEach((templatePath) => {
           if (
@@ -509,7 +511,7 @@ export default class extends BaseGenerator {
       labels,
       hashEntry,
     };
-    /* 
+    /*
     // Create directories
     // These directories may already exist
     [
@@ -641,6 +643,7 @@ export default class extends BaseGenerator {
       "components/%s/Update.vue",
       "components/%s/Show.vue",
       "components/%s/Search.vue",
+      "components/%s/Select.vue",
       "components/%s/settings.js",
 
       // routes
