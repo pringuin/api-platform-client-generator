@@ -136,7 +136,15 @@ export default class {
   }
 
   getHtmlInputTypeFromField(field) {
-    const fieldId = (field.id || "").replace("https://", "http://");
+    let fieldId = (field.id || "").replace("https://", "http://");
+    let query = {};
+
+    if (URL.canParse(fieldId)) {
+      const url = new URL(fieldId);
+      if (url.search) fieldId = fieldId.replace(url.search, "");
+      query = Object.fromEntries(url.searchParams.entries());
+    }
+
     switch (fieldId) {
       case "http://schema.org/email":
         return { type: "email" };
@@ -148,7 +156,10 @@ export default class {
         return { type: "password" };
 
       case "http://schema.org/html":
-        return { type: "html" };
+        return {
+          args: query,
+          type: "html",
+        };
 
       case this.entrypointWithSlash + "color": // fall through
       case "http://schema.org/color":
