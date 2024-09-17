@@ -215,12 +215,20 @@ export default class extends BaseGenerator {
         this.registerTemplates(`quasar/`, [`router/${routeModule}`]);
       });
 
-    fs.readdirSync(`${this.templateDirectory}/quasar/stores/`)
-      .filter((foundDir) => foundDir !== "foo.js")
-      .forEach((routeModule) => {
-        console.log("found custom template:", routeModule);
-        this.registerTemplates(`quasar/`, [`stores/${routeModule}`]);
-      });
+    try {
+      fs.readdirSync(`${this.templateDirectory}/quasar/stores/`)
+        .filter((foundDir) => foundDir !== "foo.js")
+        .forEach((routeModule) => {
+          console.log("found custom template:", routeModule);
+          this.registerTemplates(`quasar/`, [`stores/${routeModule}`]);
+        });
+    } catch (error) {
+      console.log(
+        "error when trying to find templates at",
+        `${this.templateDirectory}/quasar/stores/`,
+        error
+      );
+    }
 
     handlebars.registerHelper("compare", hbh_comparison.compare);
     handlebars.registerHelper("ifEven", hbh_comparison.ifEven);
