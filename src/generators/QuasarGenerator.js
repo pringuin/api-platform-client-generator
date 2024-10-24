@@ -238,6 +238,7 @@ export default class extends BaseGenerator {
     handlebars.registerHelper("lowercase", hbh_string.lowercase);
     handlebars.registerHelper("capitalize", hbh_string.capitalize);
     handlebars.registerHelper("append", hbh_string.append);
+    handlebars.registerHelper("replace", hbh_string.replace);
     handlebars.registerHelper("filter", hbh_array.filter);
     handlebars.registerHelper("pluck", hbh_array.pluck);
     handlebars.registerHelper("camelcase", hbh_string.camelcase);
