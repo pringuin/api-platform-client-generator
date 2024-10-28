@@ -161,6 +161,17 @@ export default class {
           type: "html",
         };
 
+      case "http://schema.org/amount":
+        if (query.currency) {
+          return {
+            args: query,
+            type: "amountWithCurrency",
+            step: "0.1",
+            number: true,
+          };
+        }
+        break;
+
       case this.entrypointWithSlash + "color": // fall through
       case "http://schema.org/color":
         return { type: "color" };
