@@ -203,6 +203,9 @@ export default class {
       case "http://www.w3.org/2001/XMLSchema#dateTime":
         return { type: "dateTime" };
 
+      case "http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON":
+        return { type: "object" };
+
       default:
         if (
           field.id &&
@@ -216,6 +219,9 @@ export default class {
             type: "text",
             referencedClass: referencedClass,
           };
+        }
+        if (field.range == null && field.type === "string") {
+          return { type: "text[]" };
         }
         return { type: "text" };
     }
