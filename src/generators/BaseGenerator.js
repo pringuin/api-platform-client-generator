@@ -172,6 +172,9 @@ export default class {
         }
         break;
 
+      case "http://www.w3.org/ns/hydra/core#Collection":
+        return { type: "collection", maxCardinality: 1 };
+
       case this.entrypointWithSlash + "color": // fall through
       case "http://schema.org/color":
         return { type: "color" };
@@ -186,25 +189,34 @@ export default class {
     const fieldRange = (field.range || "").replace("https://", "http://");
     switch (fieldRange) {
       case "http://www.w3.org/2001/XMLSchema#integer":
-        return { type: "number", number: true };
+        return {
+          type: "number",
+          number: true,
+          isArray: field.type === "array",
+        };
 
       case "http://www.w3.org/2001/XMLSchema#decimal":
-        return { type: "number", step: "0.1", number: true };
+        return {
+          type: "number",
+          step: "0.1",
+          number: true,
+          isArray: field.type === "array",
+        };
 
       case "http://www.w3.org/2001/XMLSchema#boolean":
-        return { type: "checkbox" };
+        return { type: "checkbox", isArray: field.type === "array" };
 
       case "http://www.w3.org/2001/XMLSchema#date":
-        return { type: "date" };
+        return { type: "date", isArray: field.type === "array" };
 
       case "http://www.w3.org/2001/XMLSchema#time":
-        return { type: "time" };
+        return { type: "time", isArray: field.type === "array" };
 
       case "http://www.w3.org/2001/XMLSchema#dateTime":
-        return { type: "dateTime" };
+        return { type: "dateTime", isArray: field.type === "array" };
 
       case "http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON":
-        return { type: "object" };
+        return { type: "object", isArray: field.type === "array" };
 
       default:
         if (
@@ -218,12 +230,10 @@ export default class {
           return {
             type: "text",
             referencedClass: referencedClass,
+            isArray: field.type === "array",
           };
         }
-        if (field.range == null && field.type === "string") {
-          return { type: "text[]" };
-        }
-        return { type: "text" };
+        return { type: "text", isArray: field.type === "array" };
     }
   }
 

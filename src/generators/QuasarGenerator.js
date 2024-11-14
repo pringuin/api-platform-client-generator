@@ -3,6 +3,7 @@ import fs from "fs";
 import handlebars from "handlebars";
 import hbh_comparison from "handlebars-helpers/lib/comparison.js";
 import hbh_array from "handlebars-helpers/lib/array.js";
+import hbh_math from "handlebars-helpers/lib/math.js";
 import hbh_string from "handlebars-helpers/lib/string.js";
 import BaseGenerator from "./BaseGenerator.js";
 
@@ -241,6 +242,8 @@ export default class extends BaseGenerator {
     handlebars.registerHelper("replace", hbh_string.replace);
     handlebars.registerHelper("filter", hbh_array.filter);
     handlebars.registerHelper("pluck", hbh_array.pluck);
+    handlebars.registerHelper("before", hbh_array.before);
+    handlebars.registerHelper("multiply", hbh_math.multiply);
     handlebars.registerHelper("camelcase", hbh_string.camelcase);
     handlebars.registerHelper("snakecase", hbh_string.snakecase);
 
@@ -338,16 +341,27 @@ export default class extends BaseGenerator {
 
         // We only use writableFields to generate inputs, so check for
         // each one if there's additional hydra data and inject if necessary
-        for (const field of resource.writableFields) {
+        for (const field of resource.fields) {
           const extraInfo = resource.hydraContext?.[field.name];
 
-          if (extraInfo?.enum == null) continue;
+          if (extraInfo) {
+            // If the field has range:array, and a sepearate range for items, pull that value up
+            if (
+              field.type === "array" &&
+              extraInfo["@type"]["hydra:member"]["range"]
+            ) {
+              field.range = extraInfo["@type"]["hydra:member"]["range"];
+            }
+          }
 
-          field.enumData = {
-            options: extraInfo.enum,
-            type: extraInfo.type,
-            default: extraInfo.default,
-          };
+          if (extraInfo?.enum != null) {
+            field.enumData = {
+              options: extraInfo.enum,
+              type: extraInfo.type,
+              default: extraInfo.default,
+            };
+            // if (extraInfo.type === "array") field.isArray = true;
+          }
         }
 
         params = this.cleanupParams(params);
