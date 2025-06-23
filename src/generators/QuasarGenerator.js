@@ -13,36 +13,142 @@ export default class extends BaseGenerator {
 
     this.generatorclass = "quasar";
 
+    const hasVueX = fs.existsSync(
+      `${this.templateDirectory}/quasar/store/modules`
+    );
+
+    if (hasVueX) {
+      // Register common templates
+      this.registerTemplates(`quasar/`, [
+        // common for modules
+        "common/store/mutation_types.js",
+        "common/store/create/actions.js",
+        "common/store/create/getters.js",
+        "common/store/create/mutation_types.js",
+        "common/store/create/mutations.js",
+        "common/store/create/state.js",
+        "common/store/delete/actions.js",
+        "common/store/delete/getters.js",
+        "common/store/delete/mutation_types.js",
+        "common/store/delete/mutations.js",
+        "common/store/delete/state.js",
+        "common/store/list/actions.js",
+        "common/store/list/getters.js",
+        "common/store/list/mutation_types.js",
+        "common/store/list/mutations.js",
+        "common/store/list/state.js",
+        "common/store/show/actions.js",
+        "common/store/show/getters.js",
+        "common/store/show/mutation_types.js",
+        "common/store/show/mutations.js",
+        "common/store/show/state.js",
+        "common/store/update/actions.js",
+        "common/store/update/getters.js",
+        "common/store/update/mutation_types.js",
+        "common/store/update/mutations.js",
+        "common/store/update/state.js",
+
+        // utils
+        "utils/allVuexStores.js",
+        "utils/vuexer.js",
+      ]);
+
+      this.registerTemplates(`quasar/`, [
+        // modules
+        "store/modules/foo/index.js",
+        "store/modules/foo/create/actions.js",
+        "store/modules/foo/create/getters.js",
+        "store/modules/foo/create/index.js",
+        "store/modules/foo/create/mutation_types.js",
+        "store/modules/foo/create/mutations.js",
+        "store/modules/foo/create/state.js",
+        "store/modules/foo/delete/actions.js",
+        "store/modules/foo/delete/getters.js",
+        "store/modules/foo/delete/index.js",
+        "store/modules/foo/delete/mutation_types.js",
+        "store/modules/foo/delete/mutations.js",
+        "store/modules/foo/delete/state.js",
+        "store/modules/foo/list/actions.js",
+        "store/modules/foo/list/getters.js",
+        "store/modules/foo/list/index.js",
+        "store/modules/foo/list/mutation_types.js",
+        "store/modules/foo/list/mutations.js",
+        "store/modules/foo/list/state.js",
+        "store/modules/foo/show/actions.js",
+        "store/modules/foo/show/getters.js",
+        "store/modules/foo/show/index.js",
+        "store/modules/foo/show/mutation_types.js",
+        "store/modules/foo/show/mutations.js",
+        "store/modules/foo/show/state.js",
+        "store/modules/foo/update/actions.js",
+        "store/modules/foo/update/getters.js",
+        "store/modules/foo/update/index.js",
+        "store/modules/foo/update/mutation_types.js",
+        "store/modules/foo/update/mutations.js",
+        "store/modules/foo/update/state.js",
+      ]);
+
+      // Try to register store overrides for specifiv modules
+      try {
+        fs.readdirSync(`${this.templateDirectory}/quasar/store/modules/`)
+          .filter((foundDir) => foundDir !== "foo")
+          .forEach((storeModule) => {
+            [
+              `store/modules/${storeModule}/index.js`,
+              `store/modules/${storeModule}/create/actions.js`,
+              `store/modules/${storeModule}/create/getters.js`,
+              `store/modules/${storeModule}/create/index.js`,
+              `store/modules/${storeModule}/create/mutation_types.js`,
+              `store/modules/${storeModule}/create/mutations.js`,
+              `store/modules/${storeModule}/create/state.js`,
+              `store/modules/${storeModule}/delete/actions.js`,
+              `store/modules/${storeModule}/delete/getters.js`,
+              `store/modules/${storeModule}/delete/index.js`,
+              `store/modules/${storeModule}/delete/mutation_types.js`,
+              `store/modules/${storeModule}/delete/mutations.js`,
+              `store/modules/${storeModule}/delete/state.js`,
+              `store/modules/${storeModule}/list/actions.js`,
+              `store/modules/${storeModule}/list/getters.js`,
+              `store/modules/${storeModule}/list/index.js`,
+              `store/modules/${storeModule}/list/mutation_types.js`,
+              `store/modules/${storeModule}/list/mutations.js`,
+              `store/modules/${storeModule}/list/state.js`,
+              `store/modules/${storeModule}/show/actions.js`,
+              `store/modules/${storeModule}/show/getters.js`,
+              `store/modules/${storeModule}/show/index.js`,
+              `store/modules/${storeModule}/show/mutation_types.js`,
+              `store/modules/${storeModule}/show/mutations.js`,
+              `store/modules/${storeModule}/show/state.js`,
+              `store/modules/${storeModule}/update/actions.js`,
+              `store/modules/${storeModule}/update/getters.js`,
+              `store/modules/${storeModule}/update/index.js`,
+              `store/modules/${storeModule}/update/mutation_types.js`,
+              `store/modules/${storeModule}/update/mutations.js`,
+              `store/modules/${storeModule}/update/state.js`,
+            ].forEach((templatePath) => {
+              if (
+                fs.existsSync(
+                  `${this.templateDirectory}/quasar/${templatePath}`
+                )
+              ) {
+                console.log("found custom template:", templatePath);
+                this.registerTemplates(`quasar/`, [templatePath]);
+              }
+            });
+          });
+      } catch (error) {
+        console.log(
+          "error when trying to find templates at",
+          `${this.templateDirectory}/quasar/store/`,
+          error
+        );
+      }
+    } else {
+      console.warn("VueX templates are not detected, skipping...");
+    }
+
     // Register common templates
     this.registerTemplates(`quasar/`, [
-      // common for modules
-      "common/store/mutation_types.js",
-      "common/store/create/actions.js",
-      "common/store/create/getters.js",
-      "common/store/create/mutation_types.js",
-      "common/store/create/mutations.js",
-      "common/store/create/state.js",
-      "common/store/delete/actions.js",
-      "common/store/delete/getters.js",
-      "common/store/delete/mutation_types.js",
-      "common/store/delete/mutations.js",
-      "common/store/delete/state.js",
-      "common/store/list/actions.js",
-      "common/store/list/getters.js",
-      "common/store/list/mutation_types.js",
-      "common/store/list/mutations.js",
-      "common/store/list/state.js",
-      "common/store/show/actions.js",
-      "common/store/show/getters.js",
-      "common/store/show/mutation_types.js",
-      "common/store/show/mutations.js",
-      "common/store/show/state.js",
-      "common/store/update/actions.js",
-      "common/store/update/getters.js",
-      "common/store/update/mutation_types.js",
-      "common/store/update/mutations.js",
-      "common/store/update/state.js",
-
       //common components
       "common/components/index.js",
       "common/components/ActionCell.vue",
@@ -54,12 +160,6 @@ export default class extends BaseGenerator {
       "common/components/Loading.vue",
       "common/components/Toolbar.vue",
 
-      // components mixins
-      "common/mixins/CreateMixin.js",
-      "common/mixins/ListMixin.js",
-      "common/mixins/ShowMixin.js",
-      "common/mixins/UpdateMixin.js",
-
       // error
       "error/SubmissionError.js",
 
@@ -70,9 +170,7 @@ export default class extends BaseGenerator {
       "utils/allPiniaStores.js",
       "utils/allRoutes.js",
       "utils/allTranslations.js",
-      "utils/allVuexStores.js",
       "utils/notify.js",
-      "utils/vuexer.js",
 
       // i18n
       "i18n/index.js",
@@ -82,39 +180,6 @@ export default class extends BaseGenerator {
     // This has no check whether the files exist, because the template for "foo" are required as fallback
 
     this.registerTemplates(`quasar/`, [
-      // modules
-      "store/modules/foo/index.js",
-      "store/modules/foo/create/actions.js",
-      "store/modules/foo/create/getters.js",
-      "store/modules/foo/create/index.js",
-      "store/modules/foo/create/mutation_types.js",
-      "store/modules/foo/create/mutations.js",
-      "store/modules/foo/create/state.js",
-      "store/modules/foo/delete/actions.js",
-      "store/modules/foo/delete/getters.js",
-      "store/modules/foo/delete/index.js",
-      "store/modules/foo/delete/mutation_types.js",
-      "store/modules/foo/delete/mutations.js",
-      "store/modules/foo/delete/state.js",
-      "store/modules/foo/list/actions.js",
-      "store/modules/foo/list/getters.js",
-      "store/modules/foo/list/index.js",
-      "store/modules/foo/list/mutation_types.js",
-      "store/modules/foo/list/mutations.js",
-      "store/modules/foo/list/state.js",
-      "store/modules/foo/show/actions.js",
-      "store/modules/foo/show/getters.js",
-      "store/modules/foo/show/index.js",
-      "store/modules/foo/show/mutation_types.js",
-      "store/modules/foo/show/mutations.js",
-      "store/modules/foo/show/state.js",
-      "store/modules/foo/update/actions.js",
-      "store/modules/foo/update/getters.js",
-      "store/modules/foo/update/index.js",
-      "store/modules/foo/update/mutation_types.js",
-      "store/modules/foo/update/mutations.js",
-      "store/modules/foo/update/state.js",
-
       // components
       "components/foo/Create.vue",
       "components/foo/Delete.vue",
@@ -138,51 +203,6 @@ export default class extends BaseGenerator {
     // try and register resource specific template overrides
     // Examples: "store/modules/task/...", "components/task/..." and "router/task.js"
     // This checks whether the template exists, and fails silently if it doesn't. THere's always a fallback to "foo"
-
-    fs.readdirSync(`${this.templateDirectory}/quasar/store/modules/`)
-      .filter((foundDir) => foundDir !== "foo")
-      .forEach((storeModule) => {
-        [
-          `store/modules/${storeModule}/index.js`,
-          `store/modules/${storeModule}/create/actions.js`,
-          `store/modules/${storeModule}/create/getters.js`,
-          `store/modules/${storeModule}/create/index.js`,
-          `store/modules/${storeModule}/create/mutation_types.js`,
-          `store/modules/${storeModule}/create/mutations.js`,
-          `store/modules/${storeModule}/create/state.js`,
-          `store/modules/${storeModule}/delete/actions.js`,
-          `store/modules/${storeModule}/delete/getters.js`,
-          `store/modules/${storeModule}/delete/index.js`,
-          `store/modules/${storeModule}/delete/mutation_types.js`,
-          `store/modules/${storeModule}/delete/mutations.js`,
-          `store/modules/${storeModule}/delete/state.js`,
-          `store/modules/${storeModule}/list/actions.js`,
-          `store/modules/${storeModule}/list/getters.js`,
-          `store/modules/${storeModule}/list/index.js`,
-          `store/modules/${storeModule}/list/mutation_types.js`,
-          `store/modules/${storeModule}/list/mutations.js`,
-          `store/modules/${storeModule}/list/state.js`,
-          `store/modules/${storeModule}/show/actions.js`,
-          `store/modules/${storeModule}/show/getters.js`,
-          `store/modules/${storeModule}/show/index.js`,
-          `store/modules/${storeModule}/show/mutation_types.js`,
-          `store/modules/${storeModule}/show/mutations.js`,
-          `store/modules/${storeModule}/show/state.js`,
-          `store/modules/${storeModule}/update/actions.js`,
-          `store/modules/${storeModule}/update/getters.js`,
-          `store/modules/${storeModule}/update/index.js`,
-          `store/modules/${storeModule}/update/mutation_types.js`,
-          `store/modules/${storeModule}/update/mutations.js`,
-          `store/modules/${storeModule}/update/state.js`,
-        ].forEach((templatePath) => {
-          if (
-            fs.existsSync(`${this.templateDirectory}/quasar/${templatePath}`)
-          ) {
-            console.log("found custom template:", templatePath);
-            this.registerTemplates(`quasar/`, [templatePath]);
-          }
-        });
-      });
 
     fs.readdirSync(`${this.templateDirectory}/quasar/components/`)
       .filter((foundDir) => foundDir !== "foo")
@@ -232,10 +252,7 @@ export default class extends BaseGenerator {
     }
 
     handlebars.registerHelper("compare", hbh_comparison.compare);
-    handlebars.registerHelper("ifEven", hbh_comparison.ifEven);
-    handlebars.registerHelper("ifOdd", hbh_comparison.ifOdd);
     handlebars.registerHelper("inArray", hbh_array.inArray);
-    handlebars.registerHelper("forEach", hbh_array.forEach);
     handlebars.registerHelper("lowercase", hbh_string.lowercase);
     handlebars.registerHelper("capitalize", hbh_string.capitalize);
     handlebars.registerHelper("append", hbh_string.append);
