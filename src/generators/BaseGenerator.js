@@ -2,7 +2,7 @@ import chalk from "chalk";
 import fs from "fs";
 import handlebars from "handlebars";
 import mkdirp from "mkdirp";
-import { sprintf } from "sprintf-js";
+import { vsprintf } from "sprintf-js";
 import prettier from "prettier";
 // import standard from "standard";
 
@@ -43,19 +43,28 @@ export default class {
     }
   }
 
-  createFileFromPattern(pattern, dir, value, context, templateValue = "foo") {
-    let moduleTemplate = sprintf(pattern, value);
+  createFileFromPattern(
+    pattern,
+    dir,
+    values,
+    context,
+    templateValues = ["foo", "Foo"]
+  ) {
+    let moduleTemplate;
+    const valuesAreTemplate =
+      new Set(templateValues).symmetricDifference(new Set(values)).size === 0;
     const hasModuleTemplate =
-      undefined !== this.templates[moduleTemplate] && value !== templateValue;
+      undefined !== this.templates[moduleTemplate] && valuesAreTemplate;
     if (hasModuleTemplate) {
-      console.log(value, " - ", pattern, "\tuses a custom override");
+      console.log(values[0], " - ", pattern, "\tuses a custom override");
+      moduleTemplate = vsprintf(pattern, values);
     } else {
-      moduleTemplate = sprintf(pattern, templateValue);
+      moduleTemplate = vsprintf(pattern, templateValues);
     }
 
     this.createFile(
       moduleTemplate,
-      sprintf(`${dir}/${pattern}`, value),
+      vsprintf(`${dir}/${pattern}`, values),
       context,
       hasModuleTemplate
     );
@@ -105,6 +114,10 @@ export default class {
 
   createEntrypoint(entrypoint, dest) {
     this.createFile("entrypoint.js", dest, { entrypoint }, false);
+  }
+
+  createConfigFile(dest, context) {
+    this.createFile("utils/config.ts", dest, context, false);
   }
 
   // eslint-disable-next-line no-unused-vars

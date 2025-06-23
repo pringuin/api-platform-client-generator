@@ -15,6 +15,7 @@ export default class NextGenerator extends BaseGenerator {
       "components/common/Pagination.tsx",
       "components/common/ReferenceLinks.tsx",
       "components/foo/List.tsx",
+      "components/foo/PageList.tsx",
       "components/foo/Show.tsx",
       "components/foo/Form.tsx",
 
@@ -26,6 +27,7 @@ export default class NextGenerator extends BaseGenerator {
       // pages
       "pages/foos/[id]/index.tsx",
       "pages/foos/[id]/edit.tsx",
+      "pages/foos/page/[page].tsx",
       "pages/foos/index.tsx",
       "pages/foos/create.tsx",
       "pages/_app.tsx",
@@ -81,19 +83,22 @@ export default class NextGenerator extends BaseGenerator {
     this.createDir(`${dir}/components/${context.lc}`);
     this.createDir(`${dir}/pages/${context.lc}s`);
     this.createDir(`${dir}/pages/${context.lc}s/[id]`);
+    this.createDir(`${dir}/pages/${context.lc}s/page`);
     [
       // components
       "components/%s/List.tsx",
+      "components/%s/PageList.tsx",
       "components/%s/Show.tsx",
       "components/%s/Form.tsx",
 
       // pages
       "pages/%ss/[id]/index.tsx",
       "pages/%ss/[id]/edit.tsx",
+      "pages/%ss/page/[page].tsx",
       "pages/%ss/index.tsx",
       "pages/%ss/create.tsx",
     ].forEach((pattern) =>
-      this.createFileFromPattern(pattern, dir, context.lc, context)
+      this.createFileFromPattern(pattern, dir, [context.lc], context)
     );
 
     // interface pattern should be camel cased
@@ -137,8 +142,10 @@ export default class NextGenerator extends BaseGenerator {
         return list;
       }
 
-      const isReferences = field.reference && field.maxCardinality !== 1;
-      const isEmbeddeds = field.embedded && field.maxCardinality !== 1;
+      const isReferences = Boolean(
+        field.reference && field.maxCardinality !== 1
+      );
+      const isEmbeddeds = Boolean(field.embedded && field.maxCardinality !== 1);
 
       return {
         ...list,

@@ -20,8 +20,8 @@ export default class ReactGenerator extends BaseGenerator {
       "hooks/list.ts",
       "hooks/mercure.ts",
       "hooks/retrieve.ts",
-      "hooks/update.ts",
       "hooks/show.ts",
+      "hooks/update.ts",
 
       // interfaces
       "interfaces/Collection.ts",
@@ -32,9 +32,9 @@ export default class ReactGenerator extends BaseGenerator {
       "components/foo/Form.tsx",
       "components/foo/index.ts",
       "components/foo/List.tsx",
-      "components/foo/Update.tsx",
-      "components/foo/type.ts",
       "components/foo/Show.tsx",
+      "components/foo/type.ts",
+      "components/foo/Update.tsx",
       "components/Field.tsx",
       "components/Links.tsx",
       "components/Pagination.tsx",
@@ -111,7 +111,7 @@ import ${titleLc}Routes from './routes/${titleLc}';
       // routes
       "routes/%s.tsx",
     ].forEach((pattern) =>
-      this.createFileFromPattern(pattern, dir, lc, context)
+      this.createFileFromPattern(pattern, dir, [lc], context)
     );
 
     // interface pattern should be camel cased
@@ -166,8 +166,10 @@ import ${titleLc}Routes from './routes/${titleLc}';
         return list;
       }
 
-      const isReferences = field.reference && field.maxCardinality !== 1;
-      const isEmbeddeds = field.embedded && field.maxCardinality !== 1;
+      const isReferences = Boolean(
+        field.reference && field.maxCardinality !== 1
+      );
+      const isEmbeddeds = Boolean(field.embedded && field.maxCardinality !== 1);
 
       return {
         ...list,

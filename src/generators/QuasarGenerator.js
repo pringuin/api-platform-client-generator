@@ -674,6 +674,7 @@ export default class extends BaseGenerator {
       "store/modules/%s/update/state.js",
 
       // components
+      // TODO: use "components/%s/%sCreate.vue", and [lc, titleUcFirst]
       "components/%s/Create.vue",
       "components/%s/Delete.vue",
       "components/%s/Filter.vue",
@@ -695,14 +696,14 @@ export default class extends BaseGenerator {
       ) {
         return;
       }
-      this.createFileFromPattern(pattern, dir, lc, context);
+      this.createFileFromPattern(pattern, dir, [lc], context);
     });
 
     [
       // pinia store
       "stores/%s.js",
     ].forEach((pattern) => {
-      this.createFileFromPattern(pattern, dir, resource.name, context);
+      this.createFileFromPattern(pattern, dir, [resource.name], context);
     });
 
     // error
