@@ -50,14 +50,14 @@ export default class {
     context,
     templateValues = ["foo", "Foo"]
   ) {
-    let moduleTemplate;
+    let moduleTemplate = vsprintf(pattern, values);
     const valuesAreTemplate =
       new Set(templateValues).symmetricDifference(new Set(values)).size === 0;
     const hasModuleTemplate =
-      undefined !== this.templates[moduleTemplate] && valuesAreTemplate;
+      undefined !== this.templates[moduleTemplate] && !valuesAreTemplate;
+
     if (hasModuleTemplate) {
       console.log(values[0], " - ", pattern, "\tuses a custom override");
-      moduleTemplate = vsprintf(pattern, values);
     } else {
       moduleTemplate = vsprintf(pattern, templateValues);
     }
