@@ -89,6 +89,8 @@ async function main() {
     ? options.serverPath.toLowerCase()
     : null;
 
+  let apiIsAuthenticated = false;
+
   const parser = (entrypointWithSlash) => {
     const parserOptions = {};
     // parserOptions are used to set headers on the hydra-requests
@@ -99,10 +101,12 @@ async function main() {
       ).toString("base64");
       parserOptions.headers = new Headers();
       parserOptions.headers.set("Authorization", `Basic ${encoded}`);
+      apiIsAuthenticated = true;
     }
     if (options.bearer && typeof options.bearer === "string") {
       parserOptions.headers = new Headers();
       parserOptions.headers.set("Authorization", `Bearer ${options.bearer}`);
+      apiIsAuthenticated = true;
     }
     switch (options.format) {
       case "swagger": // deprecated
@@ -136,6 +140,7 @@ async function main() {
           const filterDeprecated = (list) =>
             list.filter(({ deprecated }) => !deprecated);
 
+          resource.apiIsAuthenticated = apiIsAuthenticated;
           resource.fields = filterDeprecated(resource.fields);
           resource.readableFields = filterDeprecated(resource.readableFields);
           resource.writableFields = filterDeprecated(resource.writableFields);
