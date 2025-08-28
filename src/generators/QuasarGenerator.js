@@ -48,6 +48,12 @@ export default class extends BaseGenerator {
         "common/store/update/mutations.js",
         "common/store/update/state.js",
 
+        // components mixins
+        "common/mixins/CreateMixin.js",
+        "common/mixins/ListMixin.js",
+        "common/mixins/ShowMixin.js",
+        "common/mixins/UpdateMixin.js",
+
         // utils
         "utils/allVuexStores.js",
         "utils/vuexer.js",
@@ -202,7 +208,7 @@ export default class extends BaseGenerator {
 
     // try and register resource specific template overrides
     // Examples: "store/modules/task/...", "components/task/..." and "router/task.js"
-    // This checks whether the template exists, and fails silently if it doesn't. THere's always a fallback to "foo"
+    // This checks whether the template exists, and fails silently if it doesn't. There's always a fallback to "foo"
 
     fs.readdirSync(`${this.templateDirectory}/quasar/components/`)
       .filter((foundDir) => foundDir !== "foo")
@@ -263,6 +269,11 @@ export default class extends BaseGenerator {
     handlebars.registerHelper("multiply", hbh_math.multiply);
     handlebars.registerHelper("camelcase", hbh_string.camelcase);
     handlebars.registerHelper("snakecase", hbh_string.snakecase);
+
+    // reshelta filters
+    handlebars.registerHelper("ifOdd", hbh_comparison.ifOdd);
+    handlebars.registerHelper("ifEven", hbh_comparison.ifEven);
+    handlebars.registerHelper("forEach", hbh_array.forEach);
 
     this.registerSwitchHelper();
   }
