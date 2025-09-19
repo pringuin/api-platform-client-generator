@@ -397,12 +397,11 @@ export default class extends BaseGenerator {
         this.generateFiles(api, resource, dir, params);
       })
       .catch((e) => {
-        const eString = JSON.stringify(e, null, 4);
+        // const eString = JSON.stringify(e, null, 4);
         console.log(
-          chalk.red(
-            `Error running Genrator for ${resource.name}: ${eString} ${e}`
-          )
+          chalk.red(`!!! Error running Genrator for ${resource.name}:`)
         );
+        throw e;
       });
   }
 
